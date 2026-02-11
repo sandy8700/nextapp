@@ -111,7 +111,7 @@ export default function ResetPasswordPage({
                                         </button>
                                     </InputGroupAddon>
                                 </InputGroup>
-                                
+
                             </Field>
 
                             <Field>
@@ -130,7 +130,7 @@ export default function ResetPasswordPage({
                                         </button>
                                     </InputGroupAddon>
                                 </InputGroup>
-                               
+
                             </Field>
 
                             <Field>

@@ -36,14 +36,7 @@ export async function POST(req: Request) {
         });
         }
     
-    // await db.password_reset_tokens.update({
-    //   where: { email },
-    //   data: {
-    //     token: hashedToken,
-    //     expiresAt: after15Min
-    // },
-    // });
-   
+    
     const resetLink = `http://localhost:3000/auth/reset-password?token=${token}`;
 
     console.log("RESET LINK:", resetLink);
