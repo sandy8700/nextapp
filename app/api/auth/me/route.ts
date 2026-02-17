@@ -5,10 +5,10 @@ import  * as jwt from "jsonwebtoken";
 
 export async function GET() {
   try {
-    const token = (await cookies()).get("token")?.value;
-
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
     if (!token) {
-      return NextResponse.json({ user: null }, { status: 401 });
+      return NextResponse.json({ user: null, loggedIn: false }, { status: 401 });
     }
 
     const decoded = jwt.verify(
@@ -27,11 +27,11 @@ export async function GET() {
       },
       
     });
-
-    return NextResponse.json({ user });
+   
+    return NextResponse.json({ user, loggedIn: true }, );
 
   } catch {
-    return NextResponse.json({ user: null }, { status: 401 });
+    return NextResponse.json({ user: null, loggedIn: false }, { status: 401 });
   }
     
 }

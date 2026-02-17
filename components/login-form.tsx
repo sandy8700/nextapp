@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation"
 import { EyeIcon, EyeOffIcon} from "lucide-react";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group" 
 import Link from "next/link";
+import { useAuth } from "@/app/context/AuthContext";
 export function LoginForm({
   className,
   ...props
@@ -29,6 +30,7 @@ export function LoginForm({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
+  const { login } = useAuth();
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
@@ -50,8 +52,11 @@ export function LoginForm({
       toast.success("Login Successful!", {
         description: "Welcome back!",
       });
-
-      setTimeout(() => router.push("/"), 800);
+      login(data.user);
+      setTimeout(() => {
+        router.push("/");
+        router.refresh(); 
+      }, 800);
     } else {
       toast.error("Login Failed!", {
         description: data.message,
@@ -59,7 +64,6 @@ export function LoginForm({
     }
 
     setLoading(false);
-     
   }
 
   return (

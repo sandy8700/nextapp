@@ -22,13 +22,14 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { EyeIcon, EyeOffIcon } from "lucide-react"
 import Link from "next/link";
+import { useAuth } from "@/app/context/AuthContext";
 
 export function SignupForm({ className, ...props }: React.ComponentProps<typeof Card>) {
     const router = useRouter();
     const [show, setShow] = useState(false);
     const [loading, setLoading] = useState(false);
     const [confirmPassword, setConfirmPassword] = useState(false);
-
+    const { login } = useAuth();
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setLoading(true);
@@ -36,6 +37,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<typeof 
 
         const res = await fetch("/api/auth/register", {
             method: "POST",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
@@ -56,6 +58,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<typeof 
             toast.error(data.message);
         }
         setLoading(false)
+         login(data.user);
     }
 
     return (

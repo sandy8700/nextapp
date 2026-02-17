@@ -6,18 +6,16 @@ import { ZodError } from "zod";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-
     const parsed = registerSchema.parse(body);
-    // check existing email
+
     const exists = await db.user.findUnique({
       where: { email: parsed.email },
     });
-    console.log(exists);
 
     if (exists) {
       return Response.json(
         { message: "Email already registered" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -37,15 +35,9 @@ export async function POST(req: Request) {
     });
   } catch (err) {
     if (err instanceof ZodError) {
-      return Response.json(
-        { message: err.issues[0].message },
-        { status: 400 }
-      );
+      return Response.json({ message: err.issues[0].message }, { status: 400 });
     }
 
-    return Response.json(
-      { message: "Server error" },
-      { status: 500 }
-    );
+    return Response.json({ message: "Server error" }, { status: 500 });
   }
 }

@@ -29,58 +29,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { logoutAction } from "@/app/action"
 import { Button } from "./ui/button"
-import { useEffect, useState } from "react"
+import { useAuth } from "@/app/context/AuthContext"
 
-type User = {
-  name: string;
-  email: string;
-  avatar?: string;
-};
-export function NavUser(
-//   {
-//   user,
-// }: {
-//   user: {
-//     name: string
-//     email: string
-//     avatar: string
-//   }
-// }
-) {
+export function NavUser() {
   const { isMobile } = useSidebar()
- const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch("/api/auth/me", {
-          credentials: "include",
-          cache: "no-store",
-        });
-
-        const data = await res.json();
-
-        if (data?.user) {
-          setUser(data.user);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  if (!user?.name) return null;
-
-  const initials =
-    user.name
-      ?.split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase() || "U";
+  const { user, logout } = useAuth();
+  if (!user) return null;
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -91,8 +46,8 @@ export function NavUser(
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">{initials}</AvatarFallback>
+                <AvatarImage src={user.name} alt={user.name} />
+                <AvatarFallback className="rounded-lg">{}</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
@@ -110,8 +65,8 @@ export function NavUser(
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarImage src={user.name} alt={user.name} />
+                  <AvatarFallback className="rounded-lg">{user.name}</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
@@ -143,7 +98,7 @@ export function NavUser(
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-               <form action={logoutAction}>
+               <form action={logout}>
                 <Button type="submit" variant="ghost" className="w-full">
                   <LogOut />
                   Log out
