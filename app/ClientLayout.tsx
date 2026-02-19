@@ -2,21 +2,26 @@
 
 import { usePathname } from "next/navigation";
 import Header from "@/components/header";
-import { AuthProvider } from "./context/AuthContext";
+import { User } from "@/types/auth";
+import ReduxProvider from "./store/ReduxProvider";
 
-export default function ClientLayout({ children }: { children: React.ReactNode }) {
+export default function ClientLayout({ children, user }: { children: React.ReactNode, user: User | null; }) {
   const pathname = usePathname();
+  const hiddenRoutes = [
+    "/auth/login",
+    "/auth/register",
+    "/auth/forgot-password",
+    "/auth/reset-password",
+    "/admin",
+  ];
 
-  const hideHeader =
-    pathname.startsWith("/auth/login") ||
-    pathname.startsWith("/auth/register") ||
-    pathname.startsWith("/auth/forgot-password");
-    pathname.startsWith("/auth/reset-password");
-
+  const hideHeader = hiddenRoutes.some(route =>
+    pathname.startsWith(route)
+  );
   return (
-    <AuthProvider>
+    <ReduxProvider initialUser={user}>
       {!hideHeader && <Header />}
       {children}
-    </AuthProvider>
+    </ReduxProvider>
   );
 }

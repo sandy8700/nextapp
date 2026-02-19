@@ -1,7 +1,7 @@
 import { ProductCard } from "@/components/product-card";
 
 export default async function Page() {
-  
+
   const products = [
     {
       id: "1",
@@ -24,7 +24,7 @@ export default async function Page() {
       image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
       category: "Fashion",
     },
-     {
+    {
       id: "4",
       name: "Running Shoes",
       price: 1999,
@@ -38,9 +38,17 @@ export default async function Page() {
       <h1 className="text-2xl font-bold mb-6">Products</h1>
 
       <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        {products.length === 0 ? (
+          <div className="text-center py-20 text-muted-foreground">
+            No products found
+          </div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

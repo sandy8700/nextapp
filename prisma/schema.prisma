@@ -33,3 +33,13 @@ model passwordResetTokens {
   token   String?
   expiresAt DateTime?
 }
+
+
+model Product {
+  id        String   @id @default(cuid())
+  name      String
+  price     Int
+  category  String
+  image     String?
+  createdAt DateTime @default(now())
+}

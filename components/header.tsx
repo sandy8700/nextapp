@@ -23,13 +23,20 @@ import {
     Search,
 } from "lucide-react";
 
-import { useAuth } from "@/app/context/AuthContext";
+import { usePathname } from "next/navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import LogoutButton from "./logout";
 
 export default function Header() {
-    const { user, loading, logout } = useAuth();
-
-    if (loading) return null; 
+    const pathname = usePathname();
+    const user = useSelector((state: RootState) => state.auth.user);
+    const isLoggedIn = !!user;
     
+    const navLinks = [
+        { name: "Home", href: "/" },
+        { name: "Products", href: "/products" },
+    ];
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-white">
             <div className="container flex h-16 items-center justify-between gap-4 mx-auto">
@@ -53,14 +60,10 @@ export default function Header() {
 
                     <Button variant="ghost" size="icon" className="relative">
                         <ShoppingCart className="h-5 w-5" />
-                        
+
                     </Button>
 
-                    {!user ? (
-                        <Link href="/auth/login">
-                            <Button size="sm">Login</Button>
-                        </Link>
-                    ) : (
+                    {isLoggedIn ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" size="icon">
@@ -71,7 +74,7 @@ export default function Header() {
                             <DropdownMenuContent align="end" className="w-40">
 
                                 <DropdownMenuItem asChild>
-                                    <Link href="/dashboard">My Account</Link>
+                                    <Link href="/admin/dashboard">My Account</Link>
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem asChild>
@@ -83,15 +86,14 @@ export default function Header() {
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem asChild>
-                                    <button
-                                        onClick={logout}
-                                        className="text-left w-full"
-                                    >
-                                        Logout
-                                    </button>
+                                    <LogoutButton />
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
+                    ) : (
+                        <Link href="/auth/login">
+                            <Button size="sm">Login</Button>
+                        </Link>
                     )}
                     <Sheet>
                         <SheetTrigger asChild>
@@ -114,6 +116,30 @@ export default function Header() {
                     </Sheet>
                 </div>
             </div>
+            <div className="border-t">
+                <div className="container flex h-9 items-center mx-auto ">
+                    <ul className="flex gap-1">
+                        {navLinks.map((link) => {
+                            const isActive = pathname === link.href;
+
+                            return (
+                                <li key={link.href}>
+                                    <Link
+                                        href={link.href}
+                                        className={`px-3 py-2 ${isActive
+                                                ? "bg-primary text-white"
+                                                : "text-gray-600 hover:text-black"
+                                            }`}
+                                    >
+                                        {link.name}
+                                    </Link>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
+            </div>
         </header>
+
     );
 }

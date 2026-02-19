@@ -21,16 +21,18 @@ import { useRouter } from "next/navigation"
 import { EyeIcon, EyeOffIcon} from "lucide-react";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group" 
 import Link from "next/link";
-import { useAuth } from "@/app/context/AuthContext";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/app/store/authSlice";
+
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-
+  
+  const dispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
-  const { login } = useAuth();
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
@@ -38,6 +40,7 @@ export function LoginForm({
     const form = new FormData(e.currentTarget);
     const res = await fetch("/api/auth/login", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -49,10 +52,10 @@ export function LoginForm({
     const data = await res.json();
 
     if (res.ok) {
+      dispatch(setUser(data.user));
       toast.success("Login Successful!", {
         description: "Welcome back!",
       });
-      login(data.user);
       setTimeout(() => {
         router.push("/");
         router.refresh(); 

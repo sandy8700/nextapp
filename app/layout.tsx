@@ -3,6 +3,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ClientLayout from "./ClientLayout";
+import { getServerUser } from "./helper/auth";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,16 +15,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
+  const user = await getServerUser();
   return (
     <html lang="en">
       <body>
-          <ClientLayout>
-            <TooltipProvider>
-              {children}
-            </TooltipProvider>
-            <Toaster position="top-right" richColors />
-          </ClientLayout>
+        <ClientLayout user={user}>
+          <TooltipProvider>
+            {children}
+          </TooltipProvider>
+          <Toaster position="top-right" richColors />
+        </ClientLayout>
       </body>
     </html>
   );

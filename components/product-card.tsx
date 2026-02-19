@@ -4,26 +4,25 @@ import Image from "next/image";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-
-type Product = {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  category?: string;
-};
+import { Product } from "@/types/products";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
-    <Card className="w-full max-w-sm hover:shadow-lg transition">
+    <Card className="w-full max-w-sm hover:shadow-lg transition pt-0">
       <CardHeader className="p-0">
         <div className="relative h-48 w-full">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-cover rounded-t-lg"
-          />
+          {product.image ? (
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              className="object-cover rounded-t-lg"
+            />
+          ) : (
+            <div className="bg-muted/50 h-full w-full rounded-t-lg flex items-center justify-center text-sm text-muted-foreground">
+              No Image
+            </div>
+          )}
         </div>
       </CardHeader>
 
