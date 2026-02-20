@@ -28,7 +28,7 @@ export async function GET() {
       
     });
    
-    return NextResponse.json({ user, loggedIn: true }, );
+    return NextResponse.json({ user, loggedIn: true });
 
   } catch {
     return NextResponse.json({ user: null, loggedIn: false }, { status: 401 });

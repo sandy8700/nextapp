@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.3.0
- * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+ * Prisma Client JS version: 7.4.0
+ * Query Engine version: ab56fe763f921d033a6c195e7ddeb3e255bdbb57
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.3.0",
-  engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
+  client: "7.4.0",
+  engine: "ab56fe763f921d033a6c195e7ddeb3e255bdbb57"
 }
 
 /**
@@ -673,7 +673,8 @@ export const ProductScalarFieldEnum = {
   price: 'price',
   category: 'category',
   image: 'image',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -717,7 +718,6 @@ export type passwordResetTokensOrderByRelevanceFieldEnum = (typeof passwordReset
 
 
 export const ProductOrderByRelevanceFieldEnum = {
-  id: 'id',
   name: 'name',
   category: 'category',
   image: 'image'

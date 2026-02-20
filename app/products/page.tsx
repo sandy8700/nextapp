@@ -8,8 +8,8 @@ export default function ProductsPage() {
 
   useEffect(() => {
     const list = async () => {
-      const res = await fetch("/api/products")
-      const data = await res.json()
+      const res = await fetch("/api/products");
+      const data = await res.json();
       setProducts(data)
     }
     void list()
@@ -19,7 +19,6 @@ export default function ProductsPage() {
     <div className="container mx-auto py-10">
       <h1 className="text-2xl font-bold mb-6">Products</h1>
 
-      <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {products.length === 0 ? (
           <div className="text-center py-20 text-muted-foreground">
             No products found
@@ -32,6 +31,5 @@ export default function ProductsPage() {
           </div>
         )}
       </div>
-    </div>
-  );
+   );
 }

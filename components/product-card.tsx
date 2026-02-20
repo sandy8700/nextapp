@@ -37,7 +37,7 @@ export function ProductCard({ product }: { product: Product }) {
           High quality product with modern design.
         </p>
 
-        <p className="text-xl font-semibold">₹ {product.price}</p>
+        <p className="text-xl font-semibold"> ₹ {Number(product.price).toLocaleString("en-IN")}</p>
       </CardContent>
 
       <CardFooter className="flex gap-2">
