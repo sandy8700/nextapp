@@ -23,17 +23,33 @@ import {
 
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { toast } from "sonner"
+import { Textarea } from "@/components/ui/textarea"
 
 export default function NewProductPage() {
 
     const router = useRouter()
     const [loading, setLoading] = useState(false)
+    const [imageUrl, setImageUrl] = useState("")
     const [form, setForm] = useState({
         name: "",
         price: "",
+        description: "",
         category: "",
         image: "",
     })
+    async function handleImageUpload(file: File) {
+        const formData = new FormData()
+        formData.append("file", file)
+
+        const res = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+        })
+
+        const data = await res.json()
+        setImageUrl(data.url)
+        setForm(prev => ({ ...prev, image: data.url }))
+    }
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
 
@@ -60,6 +76,7 @@ export default function NewProductPage() {
             setForm({
                 name: "",
                 price: "",
+                description: "",
                 category: "",
                 image: "",
             })
@@ -125,7 +142,6 @@ export default function NewProductPage() {
                             <Field>
                                 <FieldLabel htmlFor="name">Product Name</FieldLabel>
                                 <Input
-                                    id="name"
                                     required
                                     value={form.name}
                                     onChange={(e) =>
@@ -135,9 +151,8 @@ export default function NewProductPage() {
                             </Field>
 
                             <Field>
-                                <FieldLabel htmlFor="price">Price</FieldLabel>
+                                <FieldLabel htmlFor="price">Price </FieldLabel>
                                 <Input
-                                    id="price"
                                     type="number"
                                     required
                                     value={form.price}
@@ -150,7 +165,6 @@ export default function NewProductPage() {
                             <Field>
                                 <FieldLabel htmlFor="category">Category</FieldLabel>
                                 <Input
-                                    id="category"
                                     required
                                     value={form.category}
                                     onChange={(e) =>
@@ -158,15 +172,26 @@ export default function NewProductPage() {
                                     }
                                 />
                             </Field>
-
+                            <Field>
+                                <FieldLabel htmlFor="description">Description</FieldLabel>
+                                <Textarea
+                                    required
+                                    value={form.description}
+                                    onChange={(e) =>
+                                        setForm({ ...form, description: e.target.value })
+                                    }
+                                />
+                            </Field>
                             <Field>
                                 <FieldLabel htmlFor="image">Image URL</FieldLabel>
                                 <Input
-                                    id="image"
-                                    value={form.image}
-                                    onChange={(e) =>
-                                        setForm({ ...form, image: e.target.value })
-                                    }
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        if (e.target.files?.[0]) {
+                                        handleImageUpload(e.target.files[0])
+                                        }
+                                    }}
                                 />
                             </Field>
 

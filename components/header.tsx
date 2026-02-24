@@ -25,14 +25,20 @@ import {
 
 import { usePathname } from "next/navigation";
 import { useSelector } from "react-redux";
-import { RootState } from "@/app/store/store";
+import { RootState } from "@/app/store";
 import LogoutButton from "./logout";
+import { CartItem } from "@/app/store/cartSlice";
 
 export default function Header() {
+    const items = useSelector((state: RootState) => state.cart.items) ?? []
+
+    const total = items.reduce(
+        (sum: number, item: CartItem) => sum + item.quantity, 0)
+
     const pathname = usePathname();
     const user = useSelector((state: RootState) => state.auth.user);
     const isLoggedIn = !!user;
-    
+
     const navLinks = [
         { name: "Home", href: "/" },
         { name: "Products", href: "/products" },
@@ -59,8 +65,12 @@ export default function Header() {
                     </Button>
 
                     <Button variant="ghost" size="icon" className="relative">
-                        <ShoppingCart className="h-5 w-5" />
-
+                        <Link href="/cart">
+                            <ShoppingCart className="h-5 w-5" />
+                            <span className="absolute -top-2 -right-2 bg-primary text-white text-xs px-1.5 py-0.5 rounded-full">
+                                {total}
+                            </span>
+                        </Link>
                     </Button>
 
                     {isLoggedIn ? (
@@ -127,8 +137,8 @@ export default function Header() {
                                     <Link
                                         href={link.href}
                                         className={`px-3 py-2 ${isActive
-                                                ? "bg-primary text-white"
-                                                : "text-gray-600 hover:text-black"
+                                            ? "bg-primary text-white"
+                                            : "text-gray-600 hover:text-black"
                                             }`}
                                     >
                                         {link.name}

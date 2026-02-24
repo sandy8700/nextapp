@@ -5,6 +5,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Product } from "@/types/products";
+import Link from "next/link";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
@@ -31,11 +32,12 @@ export function ProductCard({ product }: { product: Product }) {
           <Badge variant="secondary">{product.category}</Badge>
         )}
 
-        <CardTitle className="text-lg">{product.name}</CardTitle>
-
-        <p className="text-muted-foreground text-sm">
-          High quality product with modern design.
-        </p>
+        <CardTitle className="text-lg"><Link href={`/products/${product.id}`}>{product.name}</Link></CardTitle>
+        <div className="max-w-[300px] overflow-hidden">
+          <p className="text-muted-foreground text-sm truncate">
+            {product.description || "-"}
+          </p>
+        </div>
 
         <p className="text-xl font-semibold"> ₹ {Number(product.price).toLocaleString("en-IN")}</p>
       </CardContent>
@@ -43,7 +45,7 @@ export function ProductCard({ product }: { product: Product }) {
       <CardFooter className="flex gap-2">
         <Button className="w-fit">Add to Cart</Button>
         <Button variant="outline" className="w-fit">
-          View
+         <Link href={`/products/${product.id}`}>View</Link>
         </Button>
       </CardFooter>
     </Card>

@@ -29,7 +29,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { useSelector } from "react-redux"
-import { RootState } from "@/app/store/store"
+import { RootState } from "@/app/store"
 import LogoutButton from "./logout"
 
 export function NavUser() {

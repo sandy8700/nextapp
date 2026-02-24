@@ -16,8 +16,11 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Product } from "@/types/products"
 import { ColumnDef } from "@tanstack/react-table"
+import { PencilIcon, TrashIcon } from "lucide-react"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -26,54 +29,100 @@ import { toast } from "sonner"
 
 export default function Products() {
   const router = useRouter();
- const [deletingId, setDeletingId] = useState<number | null>(null)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
 
-async function handleDelete(id: number) {
-  const confirmed = window.confirm("Are you sure you want to delete this product?")
-  if (!confirmed) return
+  async function handleDelete(id: number) {
+    const confirmed = window.confirm("Are you sure you want to delete this product?")
+    if (!confirmed) return
 
-  try {
-    setDeletingId(id)
+    try {
+      setDeletingId(id)
 
-    const res = await fetch(`/api/products/${id}`, {
-      method: "DELETE",
-    })
+      const res = await fetch(`/api/products/${id}`, {
+        method: "DELETE",
+      })
 
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}))
-      throw new Error(data.message || "Delete failed")
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.message || "Delete failed")
+      }
+
+      toast.success("Product deleted successfully")
+
+      setProducts(prev => prev.filter(product => Number(product.id) !== id))
+
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Failed to delete product"
+      toast.error(errorMessage)
+    } finally {
+      setDeletingId(null)
     }
-
-    toast.success("Product deleted successfully")
-    
-     setProducts(prev => prev.filter(product => product.id !== id))
-
-
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : "Failed to delete product"
-    toast.error(errorMessage)
-  } finally {
-    setDeletingId(null)
   }
-}
   const columns: ColumnDef<Product>[] = [
 
     {
       accessorKey: "id",
       header: "ID",
-      cell: ({ row }) => row.index + 1,
+      cell: ({ row }) => row.original.id,
+    },
+{
+      accessorKey: "image",
+      header: "Image",
+      cell: ({ row }) => {
+        const image = row.original.image
+        return image ? (
+          <div className="w-16 h-16">
+            <Image src={image} alt={row.original.name} className="w-full h-full object-cover rounded" width={50} height={50} />
+          </div>
+        ) : (
+          <div className="w-14 h-14 bg-muted rounded flex items-center justify-center text-xs text-muted-foreground">
+            No Image
+          </div>
+        )
+      },  
     },
     {
       accessorKey: "name",
       header: "Name",
     },
     {
+      accessorKey: "description",
+      header: "Description",
+      size: 300,
+      cell: ({ row }) => {
+        const desc = row.getValue("description") as string
+
+        if (!desc) return "-"
+
+        return (
+          <div className="max-w-[300px]">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="truncate cursor-default">
+                  {desc}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-[400px] break-words">
+                {desc}
+              </TooltipContent>
+            </Tooltip>
+          </div>
+        )
+      },
+    },
+    {
       accessorKey: "price",
       header: "Price",
       cell: ({ row }) => {
-        const price = row.getValue("price") as number
-        return `₹ ${price.toLocaleString("en-IN")}`
+        const price = Number(row.getValue("price"))
+        return new Intl.NumberFormat("en-IN", {
+          style: "currency",
+          currency: "INR",
+          maximumFractionDigits: 0,
+        }).format(price)
       },
+     
     },
     {
       id: "actions",
@@ -83,13 +132,13 @@ async function handleDelete(id: number) {
 
         return (
           <div className="flex gap-2">
-            <Button size="sm" className="cursor-pointer" variant="outline" onClick={() => router.push(`/admin/products/${product.id}/edit`)}>
-              Edit
+            <Button size="sm" className="cursor-pointer primary hover:text-green-500 hover:bg-green-200" variant="ghost" onClick={() => router.push(`/admin/products/${product.id}/edit`)}>
+              <PencilIcon/>
             </Button>
 
-            <Button size="sm" className="cursor-pointer" variant="destructive" onClick={() => handleDelete(Number(product.id))}
+            <Button size="sm" className="cursor-pointer text-destructive hover:bg-red-300 hover:text-destructive"  variant="ghost" onClick={() => handleDelete(Number(product.id))}
               disabled={deletingId === Number(product.id)}>
-              {deletingId === Number(product.id) ? "Deleting..." : "Delete"}
+              <TrashIcon/>
             </Button>
           </div>
         )

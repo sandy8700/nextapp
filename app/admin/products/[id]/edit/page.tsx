@@ -12,6 +12,8 @@ import { Separator } from "@/components/ui/separator"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import { Product } from "@/types/products"
+import { Textarea } from "@/components/ui/textarea"
+import Image from "next/image"
 
 export default function EditProductPage() {
     const router = useRouter()
@@ -24,9 +26,23 @@ export default function EditProductPage() {
     const [form, setForm] = useState({
         name: "",
         price: "",
+        description: "",
         category: "",
         image: "",
     })
+    async function handleImageUpload(file: File) {
+        const formData = new FormData()
+        formData.append("file", file)
+
+        const res = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+        })
+
+        const data = await res.json()
+
+        setForm(prev => ({ ...prev, image: data.url }))
+    }
 
     useEffect(() => {
         async function fetchProduct() {
@@ -45,6 +61,7 @@ export default function EditProductPage() {
                 setForm({
                     name: data.name ?? "",
                     price: String(data.price ?? ""),
+                    description: data.description ?? "",
                     category: data.category ?? "",
                     image: data.image ?? "",
                 })
@@ -128,10 +145,7 @@ export default function EditProductPage() {
                 </header>
 
                 <div className="flex flex-1 flex-col gap-6 p-4">
-
-
                     <h1 className="text-2xl font-bold mb-4">Edit Product</h1>
-                    <span>Products id: {id }</span>
                     <form onSubmit={handleSubmit}>
 
                         <FieldGroup>
@@ -163,13 +177,38 @@ export default function EditProductPage() {
                                     required
                                 />
                             </Field>
-
+                            <Field>
+                                <FieldLabel htmlFor="description">Description</FieldLabel>
+                                <Textarea
+                                    id="description"
+                                    required
+                                    value={form.description}
+                                    onChange={(e) =>
+                                        setForm({ ...form, description: e.target.value })
+                                    }
+                                />
+                            </Field>
                             <Field>
                                 <FieldLabel>Image URL</FieldLabel>
                                 <Input
-                                    value={form.image}
-                                    onChange={(e) => setForm({ ...form, image: e.target.value })}
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        if (e.target.files?.[0]) {
+                                            handleImageUpload(e.target.files[0])
+                                        }
+                                    }}
                                 />
+                                {form.image && (
+                                    <div className="relative w-32 h-50">
+                                        <Image
+                                            src={form.image}
+                                            alt="Product"
+                                            fill
+                                            className="object-cover rounded-md border max-w-[300px] max-h-[300px]"
+                                        />
+                                    </div>
+                                )}
                             </Field>
 
                         </FieldGroup>

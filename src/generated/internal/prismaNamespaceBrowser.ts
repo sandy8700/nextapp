@@ -101,6 +101,7 @@ export const ProductScalarFieldEnum = {
   name: 'name',
   price: 'price',
   category: 'category',
+  description: 'description',
   image: 'image',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -149,6 +150,7 @@ export type passwordResetTokensOrderByRelevanceFieldEnum = (typeof passwordReset
 export const ProductOrderByRelevanceFieldEnum = {
   name: 'name',
   category: 'category',
+  description: 'description',
   image: 'image'
 } as const
 

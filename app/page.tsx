@@ -1,37 +1,21 @@
+"use client";
 import { ProductCard } from "@/components/product-card";
+import { Product } from "@/types/products";
+import { useEffect, useState } from "react";
 
-export default async function Page() {
+export default function Page() {
 
-  const products = [
-    {
-      id: "1",
-      name: "Wireless Headphones",
-      price: 2999,
-      image: "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b",
-      category: "Electronics",
-    },
-    {
-      id: "2",
-      name: "Smart Watch",
-      price: 4999,
-      image: "https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b",
-      category: "Wearables",
-    },
-    {
-      id: "3",
-      name: "Running Shoes",
-      price: 1999,
-      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
-      category: "Fashion",
-    },
-    {
-      id: "4",
-      name: "Running Shoes",
-      price: 1999,
-      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff",
-      category: "Fashion",
-    },
-  ];
+ const [products, setProducts] = useState<Product[]>([])
+
+  useEffect(() => {
+    const list = async () => {
+      const res = await fetch("/api/products");
+      const data = await res.json();
+      setProducts(data)
+    }
+    void list()
+  }, [])
+  
 
   return (
     <div className="container mx-auto px-4 py-10">
