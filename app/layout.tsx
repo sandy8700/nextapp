@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "react-country-state-city/dist/react-country-state-city.css";
+import "./custom.css";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ClientLayout from "./ClientLayout";

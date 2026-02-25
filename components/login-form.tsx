@@ -116,9 +116,7 @@ export function LoginForm({
               </Field>
               <Field>
                 <Button type="submit" disabled={loading}>{loading ? "Logging in..." : "Login"}</Button>
-                {/* <Button variant="outline" type="button">
-                  Login with Google
-                </Button> */}
+               
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <Link href="/auth/register">Sign up</Link>
                 </FieldDescription>

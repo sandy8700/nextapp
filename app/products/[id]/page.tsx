@@ -5,13 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { QuantityInput } from "@/components/ui/quantity";
 import { Product } from "@/types/products";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 export default function ProductsViewPage() {
     const dispatch = useDispatch()
+    const [showSuccess, setShowSuccess] = useState(false)
     const [product, setProduct] = useState<Product | null>(null)
     const [quantity, setQuantity] = useState(1)
     const params = useParams()
@@ -25,6 +28,21 @@ export default function ProductsViewPage() {
         void details()
     }, [id])
 
+    const handleAddToCart = () => {
+        dispatch(
+            addToCart({
+                id: Number(product!.id),
+                name: product!.name,
+                price: product!.price,
+                image: product!.image,
+                quantity: quantity,
+            })
+        )
+
+        setShowSuccess(true)
+
+        // setTimeout(() => setShowSuccess(false), 3000)
+    }
     return (
 
         <div className="container mx-auto">
@@ -54,6 +72,29 @@ export default function ProductsViewPage() {
                 </Breadcrumb>
 
             </header>
+            {showSuccess && (
+                <div className="w-full bg-green-600 text-white rounded-md px-6 py-4 flex items-center justify-between mb-8">
+
+                    <div className="flex items-center gap-3">
+                        <CheckCircle2 className="h-5 w-5" />
+                        <p className="text-sm font-medium">
+                            <span className="font-semibold">“{product?.name}”</span> has been added to your cart.
+                        </p>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                        <div className="h-6 w-px bg-white/40" />
+
+                        <Link
+                            href="/cart"
+                            className="flex items-center gap-1 text-sm font-semibold hover:underline"
+                        >
+                            View cart
+                            <ArrowRight className="h-4 w-4" />
+                        </Link>
+                    </div>
+                </div>
+            )}
             <div className="grid grid-cols-3 gap-4">
                 {product && (
                     <>
@@ -90,15 +131,7 @@ export default function ProductsViewPage() {
                                     </Field>
                                 </div>
                                 <Button className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition" onClick={() =>
-                                    dispatch(
-                                        addToCart({
-                                            id: Number(product.id),
-                                            name: product.name,
-                                            price: product.price,
-                                            image: product.image,
-                                            quantity: quantity,
-                                        })
-                                    )
+                                    handleAddToCart()
                                 }
                                 >
                                     Add to Cart

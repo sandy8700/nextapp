@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Header from "@/components/header";
 import { User } from "@/types/auth";
 import ReduxProvider from "./store/ReduxProvider";
+import Footer from "@/components/footer";
 
 export default function ClientLayout({ children, user }: { children: React.ReactNode, user: User | null; }) {
   const pathname = usePathname();
@@ -22,6 +23,7 @@ export default function ClientLayout({ children, user }: { children: React.React
     <ReduxProvider initialUser={user}>
       {!hideHeader && <Header />}
       {children}
+      {!hideHeader && <Footer />}
     </ReduxProvider>
   );
 }

@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { setUser } from "@/app/store/authSlice";
+import { Button } from "./ui/button";
 
 export default function LogoutButton() {
   const dispatch = useDispatch();
@@ -30,12 +31,13 @@ export default function LogoutButton() {
   };
 
   return (
-    <button
+    <Button
       type="button"
       onClick={handleLogout}
       className="px-2 text-left w-full"
+      variant="ghost"
     >
       Logout
-    </button>
+    </Button>
   );
 }

@@ -23,7 +23,7 @@ import {
     Search,
 } from "lucide-react";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 import LogoutButton from "./logout";
@@ -31,7 +31,7 @@ import { CartItem } from "@/app/store/cartSlice";
 
 export default function Header() {
     const items = useSelector((state: RootState) => state.cart.items) ?? []
-
+    const router = useRouter()
     const total = items.reduce(
         (sum: number, item: CartItem) => sum + item.quantity, 0)
 
@@ -64,13 +64,11 @@ export default function Header() {
                         <Heart className="h-5 w-5" />
                     </Button>
 
-                    <Button variant="ghost" size="icon" className="relative">
-                        <Link href="/cart">
-                            <ShoppingCart className="h-5 w-5" />
-                            <span className="absolute -top-2 -right-2 bg-primary text-white text-xs px-1.5 py-0.5 rounded-full">
-                                {total}
-                            </span>
-                        </Link>
+                    <Button variant="ghost" size="icon" className="relative" onClick={() => router.push("/cart")}>
+                        <ShoppingCart className="h-5 w-5" />
+                        <span className="absolute -top-2 -right-2 bg-primary text-white text-xs px-1.5 py-0.5 rounded-full">
+                            {total}
+                        </span>
                     </Button>
 
                     {isLoggedIn ? (
@@ -101,9 +99,7 @@ export default function Header() {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     ) : (
-                        <Link href="/auth/login">
-                            <Button size="sm">Login</Button>
-                        </Link>
+                        <Button size="sm" onClick={() => router.push("/auth/login")}>Login</Button>
                     )}
                     <Sheet>
                         <SheetTrigger asChild>
