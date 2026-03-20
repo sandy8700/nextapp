@@ -32,3 +32,28 @@ export type passwordResetTokens = Prisma.passwordResetTokensModel
  * 
  */
 export type Product = Prisma.ProductModel
+/**
+ * Model Cart
+ * 
+ */
+export type Cart = Prisma.CartModel
+/**
+ * Model Checkout
+ * 
+ */
+export type Checkout = Prisma.CheckoutModel
+/**
+ * Model Order
+ * 
+ */
+export type Order = Prisma.OrderModel
+/**
+ * Model OrderItem
+ * 
+ */
+export type OrderItem = Prisma.OrderItemModel
+/**
+ * Model Wishlist
+ * 
+ */
+export type Wishlist = Prisma.WishlistModel

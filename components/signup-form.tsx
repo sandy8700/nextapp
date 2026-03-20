@@ -26,7 +26,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/app/store/authSlice";
 
 export function SignupForm({ className, ...props }: React.ComponentProps<typeof Card>) {
-                 const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const router = useRouter();
     const [show, setShow] = useState(false);

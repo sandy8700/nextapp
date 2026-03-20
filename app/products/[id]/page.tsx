@@ -1,5 +1,6 @@
 "use client"
-import { addToCart } from "@/app/store/cartSlice";
+import { RootState } from "@/app/store";
+import { addToCart, CartItem, updateQuantity } from "@/app/store/cartSlice";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
@@ -41,7 +42,6 @@ export default function ProductsViewPage() {
 
         setShowSuccess(true)
 
-        // setTimeout(() => setShowSuccess(false), 3000)
     }
     return (
 
@@ -116,7 +116,7 @@ export default function ProductsViewPage() {
                             <h1 className="text-2xl font-bold mb-3">{product.name}</h1>
 
                             <p className="text-xl font-semibold text-emerald-600">
-                                ₹ {product.price}
+                                ₹ {product.price * quantity}
                             </p>
                             <div className="text-muted-foreground my-3">
                                 <span className="font-medium text-primary">Description: </span>
@@ -127,7 +127,7 @@ export default function ProductsViewPage() {
                                 <div>
                                     <Field>
                                         <FieldLabel>Quantity</FieldLabel>
-                                        <QuantityInput value={quantity} onChange={setQuantity} />
+                                        <QuantityInput value={quantity} onChange={(val) => setQuantity(val)} />
                                     </Field>
                                 </div>
                                 <Button className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition" onClick={() =>

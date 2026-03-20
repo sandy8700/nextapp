@@ -24,25 +24,44 @@ import {
 } from "lucide-react";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/app/store";
 import LogoutButton from "./logout";
 import { CartItem } from "@/app/store/cartSlice";
+import { useEffect } from "react";
+import { WishlistItem } from "@/types/products";
+import { setWishlist } from "@/app/store/wishlistSlice";
 
 export default function Header() {
+    const wishlistIds = useSelector((state: RootState) => state.wishlist.ids);
     const items = useSelector((state: RootState) => state.cart.items) ?? []
     const router = useRouter()
     const total = items.reduce(
         (sum: number, item: CartItem) => sum + item.quantity, 0)
-
+    const dispatch = useDispatch()
     const pathname = usePathname();
     const user = useSelector((state: RootState) => state.auth.user);
     const isLoggedIn = !!user;
-
     const navLinks = [
         { name: "Home", href: "/" },
         { name: "Products", href: "/products" },
     ];
+    useEffect(() => {
+        if (!user?.id) return;
+
+        const loadWishlist = async () => {
+            try {
+                const res = await fetch(`/api/wishlist?userId=${user.id}`);
+                const data = await res.json();
+                const ids = data.map((item: WishlistItem) => item.product.id);
+                dispatch(setWishlist(ids));
+            } catch (error) {
+                console.error("Wishlist Error:", error);
+            }
+        };
+
+        loadWishlist();
+    }, [user?.id]);
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-white">
             <div className="container flex h-16 items-center justify-between gap-4 mx-auto">
@@ -59,11 +78,18 @@ export default function Header() {
                 </div>
 
                 <div className="flex items-center gap-2">
-
-                    <Button variant="ghost" size="icon">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => router.push("/wishlist")}
+                        className="relative cursor-pointer"
+                    >
                         <Heart className="h-5 w-5" />
-                    </Button>
 
+                        <span className="absolute -top-2 -right-2 bg-primary text-white text-xs px-1.5 py-0.5 rounded-full">
+                            {wishlistIds.length}
+                        </span>
+                    </Button>
                     <Button variant="ghost" size="icon" className="relative" onClick={() => router.push("/cart")}>
                         <ShoppingCart className="h-5 w-5" />
                         <span className="absolute -top-2 -right-2 bg-primary text-white text-xs px-1.5 py-0.5 rounded-full">

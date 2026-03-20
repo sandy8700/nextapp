@@ -8,22 +8,46 @@ import { Product } from "@/types/products";
 import Link from "next/link";
 import { addToCart } from "@/app/store/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Heart, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { RootState } from "@/app/store";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { toggleWishlist } from "@/app/store/wishlistSlice";
 
 export function ProductCard({ product }: { product: Product }) {
   const dispatch = useDispatch()
+  const user = useSelector((state: RootState) => state.auth.user);
+  const wishlistIds = useSelector((state: RootState) => state.wishlist.ids);
+
+// const isWishlisted = wishlistIds.includes(product.id);
   const router = useRouter()
   const cartItem = useSelector((state: RootState) =>
     state.cart.items.find(item => item.id === Number(product.id))
   )
   const [loading, setLoading] = useState(false)
   const handleAddToCart = async () => {
-    setLoading(true)
+    try {
+      if (!user) {
+        router.push("/login")
+        return
+      }
+      setLoading(true)
 
-    setTimeout(() => {
+      const res = await fetch("/api/cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user.id,
+          productId: product.id
+        }),
+      })
+      const data = await res.json()
+      console.log("Add to cart response:", data)
+      if (!res.ok) {
+        throw new Error("Failed to add to cart")
+      }
+
       dispatch(
         addToCart({
           id: Number(product.id),
@@ -33,10 +57,37 @@ export function ProductCard({ product }: { product: Product }) {
           quantity: 1,
         })
       )
-      setLoading(false)
-    }, 500)
-  }
 
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+  const handleWishlist = async (productId: number) => {
+    dispatch(toggleWishlist(productId));
+    if (!user?.id) {
+      alert("Login first");
+      return;
+    }
+
+    const res = await fetch("/api/wishlist", {
+      method: "POST",
+      body: JSON.stringify({
+        userId: user.id,
+        productId,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (data.added) {
+      toast.success("Added to wishlist ❤️");
+
+    } else {
+      toast.error("Removed from wishlist ❌");
+    }
+  };
   return (
     <>
       {product && (
@@ -55,6 +106,7 @@ export function ProductCard({ product }: { product: Product }) {
                   No Image
                 </div>
               )}
+             
             </div>
           </CardHeader>
 
@@ -88,6 +140,16 @@ export function ProductCard({ product }: { product: Product }) {
                 View Cart <ArrowRight className="h-4 w-4" />
               </Button>
             )}
+             <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => handleWishlist(Number(product.id))}
+                className="relative cursor-pointer"
+              >
+                
+                <Heart className={`h-5 w-5 ${ wishlistIds.length > 0 ? "text-red-500 fill-red-500" : "" }`} />
+
+              </Button>
           </CardFooter>
         </Card>
       )}
