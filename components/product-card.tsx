@@ -19,8 +19,7 @@ export function ProductCard({ product }: { product: Product }) {
   const dispatch = useDispatch()
   const user = useSelector((state: RootState) => state.auth.user);
   const wishlistIds = useSelector((state: RootState) => state.wishlist.ids);
-
-// const isWishlisted = wishlistIds.includes(product.id);
+  const isWishlisted = wishlistIds.includes(Number(product.id));
   const router = useRouter()
   const cartItem = useSelector((state: RootState) =>
     state.cart.items.find(item => item.id === Number(product.id))
@@ -147,7 +146,7 @@ export function ProductCard({ product }: { product: Product }) {
                 className="relative cursor-pointer"
               >
                 
-                <Heart className={`h-5 w-5 ${ wishlistIds.length > 0 ? "text-red-500 fill-red-500" : "" }`} />
+                <Heart className={`h-5 w-5 ${ isWishlisted ? "text-red-500 fill-red-500" : "" }`} />
 
               </Button>
           </CardFooter>

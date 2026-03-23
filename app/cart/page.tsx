@@ -20,19 +20,9 @@ import { QuantityInput } from "@/components/ui/quantity"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { toast } from "sonner"
+import { CartApiResponse } from "@/types/products"
 
-type CartApiResponse = {
-    id: number
-    userId: string
-    productId: number
-    price: number
-    quantity: number
-    product?: {
-        id: number
-        name: string
-        image?: string
-    }
-}
+
 export default function CartPage() {
     const router = useRouter()
     const dispatch = useDispatch()

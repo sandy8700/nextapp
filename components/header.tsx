@@ -31,6 +31,7 @@ import { CartItem } from "@/app/store/cartSlice";
 import { useEffect } from "react";
 import { WishlistItem } from "@/types/products";
 import { setWishlist } from "@/app/store/wishlistSlice";
+import Image from "next/image";
 
 export default function Header() {
     const wishlistIds = useSelector((state: RootState) => state.wishlist.ids);
@@ -66,7 +67,7 @@ export default function Header() {
         <header className="sticky top-0 z-50 w-full border-b bg-white">
             <div className="container flex h-16 items-center justify-between gap-4 mx-auto">
                 <Link href="/" className="text-xl font-bold">
-                    ShopKart
+                <Image src="/logo-3.svg" alt="Logo" width={132} height={40} className="inline mr-2" />
                 </Link>
 
                 <div className="hidden md:flex flex-1 max-w-xl relative">

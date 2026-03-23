@@ -7,6 +7,18 @@ export type Product = {
   category: string;
 }
 
+export type CartApiResponse = {
+    id: number
+    userId: string
+    productId: number
+    price: number
+    quantity: number
+    product?: {
+        id: number
+        name: string
+        image?: string
+    }
+}
 export type Order = {
   id: number;
   total: number;
