@@ -67,7 +67,7 @@ export default function Header() {
         <header className="sticky top-0 z-50 w-full border-b bg-white">
             <div className="container flex h-16 items-center justify-between gap-4 mx-auto">
                 <Link href="/" className="text-xl font-bold">
-                <Image src="/logo-3.svg" alt="Logo" width={132} height={40} className="inline mr-2" />
+                <Image src="/images/logo-3.svg" alt="Logo" width={132} height={40} className="inline mr-2" />
                 </Link>
 
                 <div className="hidden md:flex flex-1 max-w-xl relative">
@@ -109,7 +109,7 @@ export default function Header() {
                             <DropdownMenuContent align="end" className="w-40">
 
                                 <DropdownMenuItem asChild>
-                                    <Link href="/admin/dashboard">My Account</Link>
+                                    <Link href={user?.role === "ADMIN" ? '/admin/dashboard' : "/my-account"}>My Account</Link>
                                 </DropdownMenuItem>
 
                                 <DropdownMenuItem asChild>

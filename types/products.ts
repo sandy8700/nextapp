@@ -1,10 +1,15 @@
-export type Product = {
-  id: string;
+export interface Product {
+  id: number;
   name: string;
-  description: string;
   price: number;
-  image: string;
-  category: string;
+  description?: string;
+  image?: string;
+  categoryId: number;
+
+  category?: {
+    id: number;
+    name: string;
+  };
 }
 
 export type CartApiResponse = {

@@ -23,6 +23,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/app/store/authSlice";
+import Image from "next/image";
 
 export function LoginForm({
   className,
@@ -72,6 +73,9 @@ export function LoginForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
+        <div className="text-center">
+            <Image src="/images/logo-3.svg" alt="Logo" width={132} height={40} className="inline mb-5 mt-2"  />
+        </div>
         <CardHeader>
           <CardTitle>Login to your account</CardTitle>
           <CardDescription>

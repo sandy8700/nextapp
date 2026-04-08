@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   passwordResetTokens: 'passwordResetTokens',
   Product: 'Product',
+  Category: 'Category',
   Cart: 'Cart',
   Checkout: 'Checkout',
   Order: 'Order',
@@ -105,14 +106,25 @@ export const ProductScalarFieldEnum = {
   id: 'id',
   name: 'name',
   price: 'price',
-  category: 'category',
   description: 'description',
   image: 'image',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  categoryId: 'categoryId'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
+
+
+export const CategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  image: 'image'
+} as const
+
+export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
 
 
 export const CartScalarFieldEnum = {
@@ -199,7 +211,6 @@ export const UserOrderByRelevanceFieldEnum = {
   name: 'name',
   email: 'email',
   password: 'password',
-  role: 'role',
   image: 'image'
 } as const
 
@@ -217,12 +228,21 @@ export type passwordResetTokensOrderByRelevanceFieldEnum = (typeof passwordReset
 
 export const ProductOrderByRelevanceFieldEnum = {
   name: 'name',
-  category: 'category',
   description: 'description',
   image: 'image'
 } as const
 
 export type ProductOrderByRelevanceFieldEnum = (typeof ProductOrderByRelevanceFieldEnum)[keyof typeof ProductOrderByRelevanceFieldEnum]
+
+
+export const CategoryOrderByRelevanceFieldEnum = {
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
+  image: 'image'
+} as const
+
+export type CategoryOrderByRelevanceFieldEnum = (typeof CategoryOrderByRelevanceFieldEnum)[keyof typeof CategoryOrderByRelevanceFieldEnum]
 
 
 export const CartOrderByRelevanceFieldEnum = {

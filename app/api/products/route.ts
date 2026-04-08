@@ -2,13 +2,25 @@ import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const products = await db.product.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  try {
+    const products = await db.product.findMany({
+      include: {
+        category: true, 
+      },
+     orderBy: { createdAt: "desc" },
 
-  return NextResponse.json(products);
+    });
+
+    return NextResponse.json(products);
+
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch products" },
+      { status: 500 }
+    );
+  }
 }
-
 export async function POST(req: Request) {
   const body = await req.json();
 
@@ -17,10 +29,10 @@ export async function POST(req: Request) {
       name: body.name,
       price: body.price,
       description: body.description,
-      category: body.category,
       image: body.image,
+      categoryId: Number(body.category),
     },
   });
 
   return NextResponse.json(product, { status: 201 });
-}
+} 

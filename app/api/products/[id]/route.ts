@@ -47,7 +47,7 @@ export async function PUT(
         name: body.name,
         price: Number(body.price),
         description: body.description,
-        category: body.category,
+        categoryId: Number(body.category),
         image: body.image,
       },
     })

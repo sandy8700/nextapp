@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
+import Image from "next/image";
 
 export function ForgotPasswordPage({
   className,
@@ -53,6 +54,9 @@ export function ForgotPasswordPage({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
+        <div className="text-center">
+          <Image src="/images/logo-3.svg" alt="Logo" width={132} height={40} className="inline mb-5 mt-2" />
+        </div>
         <CardHeader>
           <CardTitle>Forgot Password</CardTitle>
           <CardDescription>

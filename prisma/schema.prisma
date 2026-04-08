@@ -15,15 +15,20 @@ datasource db {
   provider = "mysql"
 }
 
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
 model User {
   id        String   @id @default(uuid())
   name      String  
   email     String   @unique
   password  String
-  role      String   @default("user")
+  role      Role   @default(CUSTOMER)
   image     String?
   createdAt DateTime @default(now())
-cart  Cart[]
+  cart  Cart[]
 }
 
 model passwordResetTokens {
@@ -35,18 +40,31 @@ model passwordResetTokens {
 }
 
 model Product {
-  id        Int  @id @default(autoincrement())
-  name      String
-  price     Int
-  category  String
+  id          Int      @id @default(autoincrement())
+  name        String
+  price       Int
   description String?
-  image     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-  cartItems Cart[]   // 👈 relation
-  orderItems OrderItem[]
-  wishlists Wishlist[]
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 
+  // relations
+  cartItems   Cart[]
+  orderItems  OrderItem[]
+  wishlists   Wishlist[]
+
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id])
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique
+  description String?
+  image       String?
+
+  products    Product[]
 }
 model Cart {
   id        Int @id @default(autoincrement())

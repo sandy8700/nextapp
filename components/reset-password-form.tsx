@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/card";
 
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 export default function ResetPasswordPage({
     className,
@@ -84,6 +85,9 @@ export default function ResetPasswordPage({
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
+                <div className="text-center">
+                    <Image src="/images/logo-3.svg" alt="Logo" width={132} height={40} className="inline mb-5 mt-2" />
+                </div>
                 <CardHeader>
                     <CardTitle>Reset Password</CardTitle>
                     <CardDescription>

@@ -11,6 +11,7 @@
 export type * from './models/User'
 export type * from './models/passwordResetTokens'
 export type * from './models/Product'
+export type * from './models/Category'
 export type * from './models/Cart'
 export type * from './models/Checkout'
 export type * from './models/Order'

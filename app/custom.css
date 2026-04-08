@@ -1,3 +1,7 @@
+*{
+    font-family: 'Nunito Sans', sans-serif;
+}
+
 .stsearch-box input {
     box-sizing: border-box;
     border: 0px !important;

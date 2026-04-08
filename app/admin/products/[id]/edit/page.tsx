@@ -14,6 +14,7 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { Product } from "@/types/products"
 import { Textarea } from "@/components/ui/textarea"
 import Image from "next/image"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function EditProductPage() {
     const router = useRouter()
@@ -22,7 +23,7 @@ export default function EditProductPage() {
 
     const [loading, setLoading] = useState(false)
     const [fetching, setFetching] = useState(true)
-
+    const [categories, setCategories] = useState<{ id: number; name: string }[]>([]);
     const [form, setForm] = useState({
         name: "",
         price: "",
@@ -45,37 +46,38 @@ export default function EditProductPage() {
     }
 
     useEffect(() => {
-        async function fetchProduct() {
+        async function fetchData() {
             try {
-                const res = await fetch(`/api/products/${id}`)
-                if (!res.ok) throw new Error("API error")
+                const [productRes, categoryRes] = await Promise.all([
+                    fetch(`/api/products/${id}`),
+                    fetch("/api/categories"),
+                ]);
 
-                const data: Product | null = await res.json()
+                if (!productRes.ok) throw new Error("Product API error");
 
-                if (!data) {
-                    toast.error("Product not found")
-                    router.push("/admin/products")
-                    return
-                }
+                const product: Product = await productRes.json();
+                const cats = await categoryRes.json();
+
+                setCategories(cats);
 
                 setForm({
-                    name: data.name ?? "",
-                    price: String(data.price ?? ""),
-                    description: data.description ?? "",
-                    category: data.category ?? "",
-                    image: data.image ?? "",
-                })
-
+                    name: product.name ?? "",
+                    price: String(product.price ?? ""),
+                    description: product.description ?? "",
+                    category: String(product.categoryId ?? ""),
+                    image: product.image ?? "",
+                });
             } catch (err) {
-                console.error(err)
-                toast.error("Failed to load product")
+                console.error(err);
+                toast.error("Failed to load data");
             } finally {
-                setFetching(false)
+                setFetching(false);
             }
         }
 
-        if (id) fetchProduct()
-    }, [id, router])
+        if (id) fetchData();
+    }, [id, router]);
+
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
@@ -88,6 +90,7 @@ export default function EditProductPage() {
                 body: JSON.stringify({
                     ...form,
                     price: Number(form.price),
+                    categoryId: Number(form.category),
                 }),
             })
 
@@ -156,6 +159,7 @@ export default function EditProductPage() {
                                     value={form.name}
                                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                                     required
+                                    placeholder="Enter product name"
                                 />
                             </Field>
 
@@ -166,16 +170,28 @@ export default function EditProductPage() {
                                     value={form.price}
                                     onChange={(e) => setForm({ ...form, price: e.target.value })}
                                     required
+                                    placeholder="Enter product price"
                                 />
                             </Field>
 
                             <Field>
                                 <FieldLabel>Category</FieldLabel>
-                                <Input
-                                    value={form.category}
-                                    onChange={(e) => setForm({ ...form, category: e.target.value })}
-                                    required
-                                />
+                                <Select value={form.category} onValueChange={(value) => setForm({ ...form, category: value })}>
+                                    <SelectTrigger className="w-full ">
+                                        <SelectValue placeholder="Select a category" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            {categories.map((cat) => (
+                                                <SelectItem key={cat.id} value={String(cat.id)}>
+                                                    {cat.name}
+                                                </SelectItem>
+                                            ))}
+
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+
                             </Field>
                             <Field>
                                 <FieldLabel htmlFor="description">Description</FieldLabel>
@@ -186,6 +202,7 @@ export default function EditProductPage() {
                                     onChange={(e) =>
                                         setForm({ ...form, description: e.target.value })
                                     }
+                                    placeholder="Enter product description"
                                 />
                             </Field>
                             <Field>

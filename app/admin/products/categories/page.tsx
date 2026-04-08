@@ -84,7 +84,7 @@ export default function Products() {
     },
     {
       accessorKey: "name",
-      header: "Name",
+      header: "Category Name",
     },
     {
       accessorKey: "description",
@@ -111,26 +111,7 @@ export default function Products() {
         )
       },
     },
-        {
-      accessorKey: "category",
-      header: "Category",
-      cell: ({ row }) => {
-        return row.original.category?.name || "-";
-      },
-    },
-    {
-      accessorKey: "price",
-      header: "Price",
-      cell: ({ row }) => {
-        const price = Number(row.getValue("price"))
-        return new Intl.NumberFormat("en-IN", {
-          style: "currency",
-          currency: "INR",
-          maximumFractionDigits: 0,
-        }).format(price)
-      },
-     
-    },
+    
     {
       id: "actions",
       header: "Actions",
@@ -156,7 +137,7 @@ export default function Products() {
 
   useEffect(() => {
     const list = async () => {
-      const res = await fetch("/api/products")
+      const res = await fetch("/api/categories")
       const data = await res.json()
       setProducts(data)
     }
@@ -183,7 +164,7 @@ export default function Products() {
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Products</BreadcrumbPage>
+                  <BreadcrumbPage>Categories</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -192,10 +173,10 @@ export default function Products() {
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold tracking-tight">
-              Products
+              Categories
             </h1>
-            <Link href="/admin/products/add" className="cursor-pointer">
-              <Button className="px-4 " size="sm">Add Product</Button>
+            <Link href="/admin/products/categories/add" className="cursor-pointer">
+              <Button className="px-4 " size="sm">Create Category</Button>
             </Link>
           </div>
           <DataTable columns={columns} data={products} />

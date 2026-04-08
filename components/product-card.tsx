@@ -111,7 +111,7 @@ export function ProductCard({ product }: { product: Product }) {
 
           <CardContent className="space-y-2 pt-4">
             {product.category && (
-              <Badge variant="secondary">{product.category}</Badge>
+              <Badge variant="secondary">{product.category.name}</Badge>
             )}
 
             <CardTitle className="text-lg"><Link href={`/products/${product.id}`}>{product.name}</Link></CardTitle>

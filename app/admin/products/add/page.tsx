@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
@@ -24,12 +24,14 @@ import {
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { toast } from "sonner"
 import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 export default function NewProductPage() {
 
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [imageUrl, setImageUrl] = useState("")
+    const [categories, setCategories] = useState<{ id: string; name: string }[]>([]);
     const [form, setForm] = useState({
         name: "",
         price: "",
@@ -97,7 +99,27 @@ export default function NewProductPage() {
             setLoading(false)
         }
     }
+    useEffect(() => {
+        const loadCategories = async () => {
+            try {
+                const res = await fetch("/api/categories");
 
+                if (!res.ok) {
+                    console.error("API error");
+                    return;
+                }
+
+                const data = await res.json(); 
+
+                setCategories(data);
+
+            } catch (error) {
+                console.error("Category load error:", error);
+            }
+        };
+
+        loadCategories();
+    }, []);
     return (
         <SidebarProvider>
             <AppSidebar />
@@ -147,6 +169,7 @@ export default function NewProductPage() {
                                     onChange={(e) =>
                                         setForm({ ...form, name: e.target.value })
                                     }
+                                    placeholder="Enter product name"
                                 />
                             </Field>
 
@@ -159,18 +182,30 @@ export default function NewProductPage() {
                                     onChange={(e) =>
                                         setForm({ ...form, price: e.target.value })
                                     }
+                                    placeholder="Enter product price"
+
                                 />
                             </Field>
 
                             <Field>
                                 <FieldLabel htmlFor="category">Category</FieldLabel>
-                                <Input
-                                    required
-                                    value={form.category}
-                                    onChange={(e) =>
-                                        setForm({ ...form, category: e.target.value })
-                                    }
-                                />
+                                <Select value={form.category} onValueChange={(value) => setForm({ ...form, category: value })}>
+                                    <SelectTrigger className="w-full ">
+                                        <SelectValue placeholder="Select a category" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            {categories.map((cat) => (
+                                                <SelectItem key={cat.id} value={String(cat.id)}>
+                                                    {cat.name}
+                                                </SelectItem>
+                                            ))}
+
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+
+                                
                             </Field>
                             <Field>
                                 <FieldLabel htmlFor="description">Description</FieldLabel>
@@ -180,6 +215,7 @@ export default function NewProductPage() {
                                     onChange={(e) =>
                                         setForm({ ...form, description: e.target.value })
                                     }
+                                    placeholder="Enter product description"
                                 />
                             </Field>
                             <Field>
@@ -189,7 +225,7 @@ export default function NewProductPage() {
                                     accept="image/*"
                                     onChange={(e) => {
                                         if (e.target.files?.[0]) {
-                                        handleImageUpload(e.target.files[0])
+                                            handleImageUpload(e.target.files[0])
                                         }
                                     }}
                                 />

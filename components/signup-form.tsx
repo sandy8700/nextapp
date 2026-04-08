@@ -24,6 +24,7 @@ import { EyeIcon, EyeOffIcon } from "lucide-react"
 import Link from "next/link";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/app/store/authSlice";
+import Image from "next/image";
 
 export function SignupForm({ className, ...props }: React.ComponentProps<typeof Card>) {
     const dispatch = useDispatch();
@@ -66,6 +67,10 @@ export function SignupForm({ className, ...props }: React.ComponentProps<typeof 
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
+                <div className="text-center">
+                   <Image src="/images/logo-3.svg" alt="Logo" width={132} height={40} className="inline mb-5 mt-2"  />
+                </div>
+
                 <CardHeader>
                     <CardTitle>Create an account</CardTitle>
                     <CardDescription>

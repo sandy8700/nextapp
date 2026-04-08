@@ -43,3 +43,18 @@ export const checkoutSchema = z
     message: "Emails do not match",
     path: ["confirmEmail"],
   });
+
+
+  export const userSchema = z
+  .object({
+    name: z
+      .string()
+      .min(2, "Name must be at least 2 characters")
+      .max(50, "Name is too long"),
+
+    email: z.string().email("Invalid email address"),
+
+    password: z.string().min(8, "Password must be at least 8 characters long"),
+
+    role: z.enum(["ADMIN", "CUSTOMER"]).optional(),
+  });
