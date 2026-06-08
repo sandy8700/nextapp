@@ -2,8 +2,17 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { userSchema } from "@/lib/validation";
+import { getServerUser } from "@/app/helper/auth";
 
 export async function GET() {
+  const user = await getServerUser();
+
+  if (!user || user.role !== "ADMIN") {
+    return NextResponse.json(
+      { error: "Unauthorized" },
+      { status: 403 }
+    );
+  }
   const users = await db.user.findMany({
     orderBy: { createdAt: "desc" },
   });

@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ClientLayout from "../ClientLayout";
 import { getServerUser } from "../helper/auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
     title: "Admin Dashboard",
@@ -15,6 +16,14 @@ export default async function AdminLayout({
     children: React.ReactNode;
 }>) {
     const user = await getServerUser();
+    if (!user) {
+        redirect("/auth/login");
+    }
+
+    if (user.role !== "ADMIN") {
+        redirect("/"); 
+    }
+
     return (
         <>
             <ClientLayout user={user}>

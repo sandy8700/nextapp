@@ -26,7 +26,6 @@ export default function UsersPage() {
     const [users, setUsers] = useState<User[]>([]);
     const [open, setOpen] = useState(false);
     const [deletingId, setDeletingId] = useState<number | null>(null);
-
     async function handleCreate(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 

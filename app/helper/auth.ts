@@ -15,4 +15,3 @@ export async function getServerUser(): Promise<User | null> {
     return null
   }
 }
-
